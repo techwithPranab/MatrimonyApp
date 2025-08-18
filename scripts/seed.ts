@@ -2,9 +2,9 @@
 
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
-import User from '../models/User.ts';
-import Profile from '../models/Profile.ts';
-import Subscription from '../models/Subscription.ts';
+import User from '../models/User';
+import Profile from '../models/Profile';
+import Subscription from '../models/Subscription';
 import bcrypt from 'bcryptjs';
 
 // Load environment variables
