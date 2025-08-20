@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Mail } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -100,16 +100,6 @@ export default function SignUpPage() {
       setError("Something went wrong. Please try again.");
     } finally {
       setOtpLoading(false);
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    setIsLoading(true);
-    try {
-      await signIn("google", { callbackUrl: "/profile/edit" });
-    } catch {
-      setError("Google sign up failed. Please try again.");
-      setIsLoading(false);
     }
   };
 

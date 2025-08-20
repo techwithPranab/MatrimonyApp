@@ -1,64 +1,47 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, Star, Crown, Zap, Heart } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
+type SubscriptionPlan = {
+  name: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  popular: boolean;
+  cta: string;
+  icon: keyof typeof iconMap;
+};
+
+const iconMap = {
+  Heart,
+  Star,
+  Crown,
+};
+
 export default function PricingPage() {
-  const plans = [
-    {
-      name: "Free",
-      price: "₹0",
-      period: "forever",
-      description: "Perfect for getting started",
-      features: [
-        "Basic profile creation",
-        "View up to 50 profiles",
-        "Send 5 interests per month",
-        "Basic search filters",
-        "Community support"
-      ],
-      popular: false,
-      cta: "Get Started",
-      icon: Heart
-    },
-    {
-      name: "Premium",
-      price: "₹1,999",
-      period: "month",
-      description: "Most popular choice for serious seekers",
-      features: [
-        "Unlimited profile views",
-        "Send unlimited interests",
-        "Advanced search filters",
-        "See who viewed your profile",
-        "Priority customer support",
-        "Enhanced profile visibility",
-        "Chat with matched profiles"
-      ],
-      popular: true,
-      cta: "Start Premium",
-      icon: Star
-    },
-    {
-      name: "Elite",
-      price: "₹4,999",
-      period: "month",
-      description: "Premium service with personal assistance",
-      features: [
-        "Everything in Premium",
-        "Dedicated relationship manager",
-        "Personalized match recommendations",
-        "Profile verification badge",
-        "Priority listing in search",
-        "Phone consultation",
-        "Success guarantee*"
-      ],
-      popular: false,
-      cta: "Go Elite",
-      icon: Crown
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPlans() {
+      try {
+        const res = await fetch("/api/subscription-plans");
+        const data: SubscriptionPlan[] = await res.json();
+        setPlans(data);
+      } catch {
+        setPlans([]);
+      } finally {
+        setLoading(false);
+      }
     }
-  ];
+    fetchPlans();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50">
@@ -106,67 +89,70 @@ export default function PricingPage() {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {plans.map((plan, index) => {
-              const IconComponent = plan.icon;
-              return (
-                <Card 
-                  key={index} 
-                  className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
-                    plan.popular 
-                      ? 'border-pink-500 border-2 scale-105' 
-                      : 'border-gray-200 hover:border-pink-300'
-                  }`}
-                >
-                  {plan.popular && (
-                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-center py-2 text-sm font-semibold">
-                      Most Popular
-                    </div>
-                  )}
-                  
-                  <CardHeader className={`text-center ${plan.popular ? 'pt-12' : 'pt-8'}`}>
-                    <div className="mx-auto mb-4 p-3 rounded-full bg-gradient-to-r from-pink-100 to-purple-100">
-                      <IconComponent className="h-8 w-8 text-pink-500" />
-                    </div>
-                    <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                    <CardDescription className="text-gray-600 mt-2">{plan.description}</CardDescription>
-                    <div className="mt-6">
-                      <div className="flex items-baseline justify-center">
-                        <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                        {plan.period !== "forever" && (
-                          <span className="text-gray-500 ml-1">/{plan.period}</span>
+            {loading ? (
+              <div className="col-span-3 text-center py-12 text-xl text-gray-500">Loading plans...</div>
+            ) : plans.length === 0 ? (
+              <div className="col-span-3 text-center py-12 text-xl text-gray-500">No plans available.</div>
+            ) : (
+              plans.map((plan) => {
+                const IconComponent = iconMap[plan.icon] || Heart;
+                return (
+                  <Card 
+                    key={plan.name} 
+                    className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
+                      plan.popular 
+                        ? 'border-pink-500 border-2 scale-105' 
+                        : 'border-gray-200 hover:border-pink-300'
+                    }`}
+                  >
+                    {plan.popular && (
+                      <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-center py-2 text-sm font-semibold">
+                        Most Popular
+                      </div>
+                    )}
+                    <CardHeader className={`text-center ${plan.popular ? 'pt-12' : 'pt-8'}`}>
+                      <div className="mx-auto mb-4 p-3 rounded-full bg-gradient-to-r from-pink-100 to-purple-100">
+                        <IconComponent className="h-8 w-8 text-pink-500" />
+                      </div>
+                      <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                      <CardDescription className="text-gray-600 mt-2">{plan.description}</CardDescription>
+                      <div className="mt-6">
+                        <div className="flex items-baseline justify-center">
+                          <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                          {plan.period !== "forever" && (
+                            <span className="text-gray-500 ml-1">/{plan.period}</span>
+                          )}
+                        </div>
+                        {plan.price !== "₹0" && (
+                          <p className="text-sm text-gray-500 mt-1">Billed monthly</p>
                         )}
                       </div>
-                      {plan.price !== "₹0" && (
-                        <p className="text-sm text-gray-500 mt-1">Billed monthly</p>
-                      )}
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-6">
-                    <ul className="space-y-3">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start">
-                          <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    <Button 
-                      className={`w-full ${
-                        plan.popular 
-                          ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700' 
-                          : ''
-                      }`}
-                      size="lg"
-                      asChild
-                    >
-                      <Link href="/sign-up">{plan.cta}</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <ul className="space-y-3">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-start">
+                            <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                            <span className="text-gray-700">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Button 
+                        className={`w-full ${
+                          plan.popular 
+                            ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700' 
+                            : ''
+                        }`}
+                        size="lg"
+                        asChild
+                      >
+                        <Link href="/sign-up">{plan.cta}</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
           </div>
         </div>
       </section>

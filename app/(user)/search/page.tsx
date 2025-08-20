@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -269,9 +270,11 @@ export default function SearchPage() {
                     <div className="relative">
                       <div className="aspect-[3/4] bg-gray-100 rounded-t-lg overflow-hidden">
                         {profile.photos && profile.photos.length > 0 ? (
-                          <img
+                          <Image
                             src={profile.photos[0]}
                             alt={profile.firstName}
+                            width={300}
+                            height={400}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                           />
                         ) : (

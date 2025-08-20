@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Mail } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -38,16 +38,6 @@ export default function SignInPage() {
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      await signIn("google", { callbackUrl: "/dashboard" });
-    } catch {
-      setError("Google sign in failed. Please try again.");
       setIsLoading(false);
     }
   };
@@ -102,27 +92,6 @@ export default function SignInPage() {
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-gray-50 px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              onClick={handleGoogleSignIn}
-              disabled={isLoading}
-              className="w-full"
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Google
-            </Button>
 
             <div className="text-center text-sm">
               <span className="text-gray-600">Don&apos;t have an account? </span>

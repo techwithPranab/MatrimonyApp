@@ -4,9 +4,10 @@ import connectDB from '@/lib/db';
 import Interest from '@/models/Interest';
 import { authOptions } from '@/lib/auth';
 
-export async function PUT(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -14,6 +15,7 @@ export async function PUT(request: NextRequest) {
     }
 
     await connectDB();
+    const { id } = await context.params;
 
     const { status } = await request.json();
 

@@ -4,9 +4,10 @@ import connectDB from '@/lib/db';
 import { Conversation, Message } from '@/models/Chat';
 import { authOptions } from '@/lib/auth';
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -14,6 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     await connectDB();
+    const { id } = await context.params;
 
     // Find conversation between current user and target user
     let conversation = await Conversation.findOne({

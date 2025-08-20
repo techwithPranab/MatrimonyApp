@@ -4,6 +4,7 @@ export interface IUser extends Document {
   _id: string;
   email: string;
   hashedPassword?: string;
+  matrimonyId?: string;
   roles: ('user' | 'moderator' | 'admin')[];
   phone?: string;
   phoneVerified: boolean;
@@ -27,6 +28,12 @@ const UserSchema = new Schema<IUser>({
   hashedPassword: {
     type: String,
     // Optional for OAuth users
+  },
+  matrimonyId: {
+    type: String,
+    unique: true,
+    sparse: true, // Allow null values but unique non-null values
+    index: true,
   },
   roles: {
     type: [String],
@@ -63,7 +70,7 @@ const UserSchema = new Schema<IUser>({
 });
 
 // Indexes
-UserSchema.index({ email: 1 });
+// Removed duplicate index for email
 UserSchema.index({ phone: 1 }, { sparse: true });
 UserSchema.index({ roles: 1 });
 UserSchema.index({ isActive: 1 });

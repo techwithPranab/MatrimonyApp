@@ -129,9 +129,9 @@ const SubscriptionSchema = new Schema<ISubscription>({
 });
 
 // Indexes
-SubscriptionSchema.index({ userId: 1 });
-SubscriptionSchema.index({ stripeCustomerId: 1 });
-SubscriptionSchema.index({ stripeSubscriptionId: 1 });
+// SubscriptionSchema.index({ userId: 1 });
+// SubscriptionSchema.index({ stripeCustomerId: 1 });
+// SubscriptionSchema.index({ stripeSubscriptionId: 1 });
 SubscriptionSchema.index({ plan: 1, status: 1 });
 SubscriptionSchema.index({ currentPeriodEnd: 1 });
 SubscriptionSchema.index({ nextBillingAt: 1 });

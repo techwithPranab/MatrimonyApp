@@ -4,6 +4,7 @@ import connectDB from '@/lib/db';
 import User from '@/models/User';
 import { sendOtpEmail } from '@/lib/email';
 import { generateOtp } from '@/lib/otp';
+import { generateUniqueMatrimonyId } from '@/lib/matrimonyId';
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,14 +38,16 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Generate OTP
+    // Generate OTP and Matrimony ID
     const otp = generateOtp();
     const otpExpires = Date.now() + 10 * 60 * 1000; // 10 min
+    const matrimonyId = await generateUniqueMatrimonyId();
 
     // Create new user
     const user = await User.create({
       email: email.toLowerCase(),
       hashedPassword,
+      matrimonyId,
       isActive: false,
       otp,
       otpExpires,

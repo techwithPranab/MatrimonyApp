@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -204,9 +205,11 @@ export default function ProfilePage() {
                 <div className="aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden relative">
                   {profile.photos && profile.photos.length > 0 ? (
                     <>
-                      <img
+                      <Image
                         src={profile.photos[currentPhotoIndex]}
                         alt={`${profile.firstName}`}
+                        width={400}
+                        height={500}
                         className="w-full h-full object-cover"
                       />
                       {profile.photos.length > 1 && (
