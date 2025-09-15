@@ -1,10 +1,16 @@
 
-// DEBUG: Set MONGODB_URI manually for troubleshooting - MUST be first
-process.env.MONGODB_URI = 'mongodb://localhost:27017/matrimony-web-dev';
-
 // Load environment variables FIRST, before any other imports
 import { config } from 'dotenv';
 config({ path: '.env.local' });
+
+// Verify MONGODB_URI is loaded
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI not found in environment variables');
+  console.log('Available env vars:', Object.keys(process.env).filter(key => key.includes('MONGO')));
+  process.exit(1);
+}
+
+console.log('✅ MONGODB_URI loaded:', process.env.MONGODB_URI);
 
 import bcrypt from 'bcryptjs';
 import connectDB from './lib/db';
@@ -357,6 +363,10 @@ const femaleNames = [
   "Ruchi", "Sonal", "Ekta", "Namrata", "Trisha", "Rupali", "Chhavi", "Meenakshi", "Shilpa", "Vidhi"
 ];
 function getRandomInt(min: number, max: number): number { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function getRandomMatrimonyId() {
+  // Example: MAT123456
+  return 'MAT' + getRandomInt(100000, 999999);
+}
 function getRandomCity() { const cities = ["Delhi", "Mumbai", "Kolkata", "Chennai", "Bangalore", "Hyderabad", "Pune", "Ahmedabad", "Jaipur", "Lucknow"]; return cities[getRandomInt(0, cities.length - 1)]; }
 function getRandomProfession() { const professions = ["Engineer", "Doctor", "Teacher", "Designer", "Developer", "Manager", "Artist", "Writer", "Consultant", "Entrepreneur"]; return professions[getRandomInt(0, professions.length - 1)]; }
 function getRandomDateOfBirth() { const start = new Date(1990, 0, 1).getTime(); const end = new Date(2003, 0, 1).getTime(); return new Date(getRandomInt(start, end)); }
@@ -452,8 +462,15 @@ async function seedAll() {
   // Seed bulk profiles (100)
   const profiles = [];
   for (let i = 0; i < 50; i++) {
+    const matrimonyId = getRandomMatrimonyId();
+    const userDoc = await User.create({
+      email: `male${i + 1}@matrimonyapp.com`,
+      hashedPassword: await bcrypt.hash('password123', 12),
+      emailVerified: new Date(),
+    });
     profiles.push({
-      userId: `male${i + 1}`,
+      userId: userDoc._id.toString(),
+      matrimonyId,
       firstName: maleNames[i],
       lastName: "Kumar",
       name: `${maleNames[i]} Kumar`,
@@ -487,8 +504,15 @@ async function seedAll() {
     });
   }
   for (let i = 0; i < 50; i++) {
+    const matrimonyId = getRandomMatrimonyId();
+    const userDoc = await User.create({
+      email: `female${i + 1}@matrimonyapp.com`,
+      hashedPassword: await bcrypt.hash('password123', 12),
+      emailVerified: new Date(),
+    });
     profiles.push({
-      userId: `female${i + 1}`,
+      userId: userDoc._id.toString(),
+      matrimonyId,
       firstName: femaleNames[i],
       lastName: "Sharma",
       name: `${femaleNames[i]} Sharma`,

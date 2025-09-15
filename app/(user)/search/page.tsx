@@ -1,16 +1,32 @@
 "use client";
-import Image from "next/image";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, MessageCircle, MapPin, Calendar, GraduationCap, Briefcase, Camera, Search, Filter, SlidersHorizontal } from "lucide-react";
+import { useState, useCallback } from "react";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { WithPullToRefresh } from "@/components/ui/pull-to-refresh";
+import { MobileSearchBar, SwipeableProfileList } from "@/components/ui/mobile-touch";
+import AdvancedSearchForm from "@/components/search/AdvancedSearchForm";
+import SearchResults from "@/components/search/SearchResults";
+import { useActionTracking, useMatrimonyTracking } from "@/lib/analytics/hooks";
 
-interface Profile {
+interface SearchFilters {
+  ageRange: { min: number; max: number };
+  heightRange: { min: number; max: number };
+  religion: string[];
+  community: string[];
+  maritalStatus: string[];
+  education: string[];
+  profession: string[];
+  location: { country: string; state: string; city: string };
+  diet: string[];
+  smoking: string[];
+  drinking: string[];
+  hasPhotos: boolean;
+  isVerified: boolean;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+}
+
+interface ProfileResult {
   _id: string;
   firstName: string;
   lastName: string;
@@ -24,364 +40,297 @@ interface Profile {
   state: string;
   country: string;
   photos: string[];
-  bio: string;
-  maritalStatus: string;
   compatibilityScore: number;
   matchReasons: string[];
   lastActiveAt: Date;
+  isOnline?: boolean;
+}
+
+interface SearchResponse {
+  profiles: ProfileResult[];
+  pagination: {
+    current: number;
+    total: number;
+    limit: number;
+    count: number;
+    totalProfiles: number;
+  };
 }
 
 export default function SearchPage() {
-  const router = useRouter();
-  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [searchFilters, setSearchFilters] = useState({
-    ageRange: { min: 21, max: 35 },
-    heightRange: { min: 150, max: 180 },
-    religion: [] as string[],
-    community: [] as string[],
-    maritalStatus: [] as string[],
-    education: [] as string[],
-    profession: [] as string[],
-    location: { country: "", state: "", city: "" },
-    diet: [] as string[],
-    smoking: [] as string[],
-    drinking: [] as string[],
-    hasPhotos: true,
-    isVerified: false,
-    page: 1,
-    limit: 20,
-    sortBy: "lastActiveAt",
-    sortOrder: "desc",
-  });
+  const isMobile = useMediaQuery('(max-width: 640px)');
 
-  const searchProfiles = async () => {
+  // Analytics hooks
+  const { trackSearch } = useActionTracking();
+  const { trackMatchmaking, trackProfileAction } = useMatrimonyTracking();
+
+  const handleSearch = async (filters?: SearchFilters, page = 1) => {
     setLoading(true);
+    
+    // Track search analytics
+    const searchFilters = filters || {
+      ageRange: { min: 21, max: 35 },
+      heightRange: { min: 150, max: 180 },
+      religion: [],
+      community: [],
+      maritalStatus: [],
+      education: [],
+      profession: [],
+      location: { country: '', state: '', city: '' },
+      diet: [],
+      smoking: [],
+      drinking: [],
+      hasPhotos: false,
+      isVerified: false,
+      sortBy: 'lastActiveAt',
+      sortOrder: 'desc' as const,
+    };
+    
+    trackSearch(searchQuery.trim(), {
+      filters: searchFilters,
+      page,
+      isMobile,
+    });
+    
     try {
+      const searchData = {
+        ...searchFilters,
+        page,
+        limit: 20,
+        searchQuery: searchQuery.trim(),
+      };
+
       const response = await fetch("/api/profiles/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(searchFilters),
+        body: JSON.stringify(searchData),
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setProfiles(data.profiles);
+        const data: SearchResponse = await response.json();
+        setSearchResults(data);
+        
+        // Track search results
+        trackMatchmaking('matches_viewed', {
+          resultCount: data.profiles.length,
+          totalResults: data.pagination.totalProfiles,
+          hasQuery: searchQuery.trim().length > 0,
+          filtersUsed: Object.keys(searchFilters).filter(key => {
+            const value = searchFilters[key as keyof SearchFilters];
+            return Array.isArray(value) ? value.length > 0 : value !== '' && value !== false;
+          }).length,
+        });
+      } else {
+        console.error("Search failed:", response.statusText);
+        setSearchResults({ profiles: [], pagination: { current: 1, total: 0, limit: 20, count: 0, totalProfiles: 0 } });
       }
     } catch (error) {
       console.error("Search error:", error);
+      setSearchResults({ profiles: [], pagination: { current: 1, total: 0, limit: 20, count: 0, totalProfiles: 0 } });
     } finally {
       setLoading(false);
     }
   };
 
-  const formatHeight = (height: number) => {
-    const feet = Math.floor(height / 30.48);
-    const inches = Math.round((height % 30.48) / 2.54);
-    return `${feet}'${inches}"`;
+  const handleRefresh = useCallback(async () => {
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate refresh
+    if (searchResults) {
+      handleSearch();
+    }
+  }, [searchResults]);
+
+  const handleLike = useCallback(async (profileId: string) => {
+    try {
+      await fetch('/api/interests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profileId, type: 'like' }),
+      });
+      
+      // Track profile interaction
+      trackProfileAction('interest_sent', profileId);
+      trackMatchmaking('match_saved', { profileId, interaction: 'like' });
+      
+    } catch (error) {
+      console.error('Failed to send interest:', error);
+    }
+  }, [trackProfileAction, trackMatchmaking]);
+
+  const handleReject = useCallback(async (profileId: string) => {
+    try {
+      await fetch('/api/interests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profileId, type: 'reject' }),
+      });
+      
+      // Track rejection
+      trackMatchmaking('match_dismissed', { profileId, interaction: 'reject' });
+      
+      // Remove from current results
+      setSearchResults(prev => prev ? {
+        ...prev,
+        profiles: prev.profiles.filter(p => p._id !== profileId)
+      } : null);
+    } catch (error) {
+      console.error('Failed to reject profile:', error);
+    }
+  }, [trackMatchmaking]);
+
+  const handleViewProfile = useCallback((profileId: string) => {
+    // Track profile view
+    trackProfileAction('view', profileId);
+    window.location.href = `/profile/${profileId}`;
+  }, [trackProfileAction]);
+
+  const handlePageChange = (page: number) => {
+    if (searchResults) {
+      // Re-run last search with new page
+      const lastFilters: SearchFilters = {
+        ageRange: { min: 21, max: 35 },
+        heightRange: { min: 150, max: 180 },
+        religion: [],
+        community: [],
+        maritalStatus: [],
+        education: [],
+        profession: [],
+        location: { country: '', state: '', city: '' },
+        diet: [],
+        smoking: [],
+        drinking: [],
+        hasPhotos: false,
+        isVerified: false,
+        sortBy: 'lastActiveAt',
+        sortOrder: 'desc',
+      };
+      handleSearch(lastFilters, page);
+    }
   };
 
+  // Mobile-optimized profiles for swipeable list
+  const mobileProfiles = searchResults?.profiles.map(profile => ({
+    id: profile._id,
+    name: `${profile.firstName} ${profile.lastName}`,
+    age: profile.age,
+    location: `${profile.city}, ${profile.state}`,
+    photos: profile.photos,
+  })) || [];
+
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <MobileSearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onSearch={() => handleSearch()}
+          onFilterToggle={() => setShowFilters(!showFilters)}
+          placeholder="Search by name, location..."
+        />
+
+        {showFilters && (
+          <div className="bg-white border-b border-gray-200 p-4">
+            <AdvancedSearchForm onSearch={handleSearch} loading={loading} />
+          </div>
+        )}
+
+        <WithPullToRefresh onRefresh={handleRefresh} enabled={!!searchResults}>
+          <SwipeableProfileList
+            profiles={mobileProfiles}
+            onLike={handleLike}
+            onReject={handleReject}
+            onViewProfile={handleViewProfile}
+            loading={loading}
+          />
+        </WithPullToRefresh>
+
+        {!searchResults && !loading && (
+          <div className="flex flex-col items-center justify-center p-8 text-center mt-20">
+            <div className="text-6xl mb-4">💝</div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Find Your Perfect Match</h3>
+            <p className="text-gray-600 mb-4">Search by name or use filters to discover compatible profiles</p>
+            <div className="bg-blue-50 rounded-lg p-4 text-left max-w-sm">
+              <h4 className="font-medium text-blue-900 mb-2">Search Tips:</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Swipe right to like profiles</li>
+                <li>• Swipe left to pass</li>
+                <li>• Tap to view full profile</li>
+                <li>• Pull down to refresh</li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop version (existing code)
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold text-gray-900">Find Your Match</h1>
-              <Badge variant="secondary" className="text-sm">
-                {profiles.length} profiles found
-              </Badge>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2"
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                Filters
-              </Button>
-              <Button onClick={searchProfiles} disabled={loading} className="flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                {loading ? "Searching..." : "Search"}
-              </Button>
+          <div className="py-8">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">Find Your Perfect Match</h1>
+              <p className="text-xl text-gray-600">
+                Use our advanced search to discover compatible profiles
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
-          {/* Filters Sidebar */}
-          {showFilters && (
-            <div className="w-80 flex-shrink-0">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Filter className="w-5 h-5" />
-                    Search Filters
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Age Range */}
-                  <div>
-                    <label htmlFor="age-min" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Age Range
-                    </label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="age-min"
-                        type="number"
-                        placeholder="Min"
-                        value={searchFilters.ageRange.min}
-                        onChange={(e) =>
-                          setSearchFilters({
-                            ...searchFilters,
-                            ageRange: { ...searchFilters.ageRange, min: parseInt(e.target.value) },
-                          })
-                        }
-                      />
-                      <Input
-                        id="age-max"
-                        type="number"
-                        placeholder="Max"
-                        value={searchFilters.ageRange.max}
-                        onChange={(e) =>
-                          setSearchFilters({
-                            ...searchFilters,
-                            ageRange: { ...searchFilters.ageRange, max: parseInt(e.target.value) },
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
+        <div className="space-y-8">
+          {/* Search Form */}
+          <AdvancedSearchForm onSearch={handleSearch} loading={loading} />
 
-                  {/* Religion */}
-                  <div>
-                    <label htmlFor="religion-select" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Religion
-                    </label>
-                    <Select>
-                      <SelectTrigger id="religion-select">
-                        <SelectValue placeholder="Select religion" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="hindu">Hindu</SelectItem>
-                        <SelectItem value="muslim">Muslim</SelectItem>
-                        <SelectItem value="christian">Christian</SelectItem>
-                        <SelectItem value="sikh">Sikh</SelectItem>
-                        <SelectItem value="buddhist">Buddhist</SelectItem>
-                        <SelectItem value="jain">Jain</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Location */}
-                  <div>
-                    <label htmlFor="location-city" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Location
-                    </label>
-                    <div className="space-y-2">
-                      <Input
-                        id="location-city"
-                        placeholder="City"
-                        value={searchFilters.location.city}
-                        onChange={(e) =>
-                          setSearchFilters({
-                            ...searchFilters,
-                            location: { ...searchFilters.location, city: e.target.value },
-                          })
-                        }
-                      />
-                      <Input
-                        id="location-state"
-                        placeholder="State"
-                        value={searchFilters.location.state}
-                        onChange={(e) =>
-                          setSearchFilters({
-                            ...searchFilters,
-                            location: { ...searchFilters.location, state: e.target.value },
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  {/* Sort Options */}
-                  <div>
-                    <label htmlFor="sort-select" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Sort By
-                    </label>
-                    <Select
-                      value={searchFilters.sortBy}
-                      onValueChange={(value) =>
-                        setSearchFilters({ ...searchFilters, sortBy: value })
-                      }
-                    >
-                      <SelectTrigger id="sort-select">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="lastActiveAt">Last Active</SelectItem>
-                        <SelectItem value="createdAt">Recently Joined</SelectItem>
-                        <SelectItem value="age">Age</SelectItem>
-                        <SelectItem value="height">Height</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
+          {/* Search Results */}
+          {(searchResults || loading) && (
+            <div>
+              <SearchResults
+                profiles={searchResults?.profiles || []}
+                loading={loading}
+                pagination={searchResults?.pagination}
+                onPageChange={handlePageChange}
+              />
             </div>
           )}
 
-          {/* Profile Grid */}
-          <div className="flex-1">
-            {loading && (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }, (_, i) => (
-                  <Card key={`loading-card-${i}`} className="animate-pulse">
-                    <div className="aspect-[3/4] bg-gray-200 rounded-t-lg" />
-                    <CardContent className="p-4">
-                      <div className="h-4 bg-gray-200 rounded mb-2" />
-                      <div className="h-3 bg-gray-200 rounded mb-4" />
-                      <div className="space-y-2">
-                        <div className="h-3 bg-gray-200 rounded" />
-                        <div className="h-3 bg-gray-200 rounded" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-            {!loading && profiles.length > 0 && (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {profiles.map((profile) => (
-                  <Card
-                    key={profile._id}
-                    className="group hover:shadow-lg transition-all duration-200 cursor-pointer"
-                    onClick={() => router.push(`/profile/${profile._id}`)}
-                  >
-                    <div className="relative">
-                      <div className="aspect-[3/4] bg-gray-100 rounded-t-lg overflow-hidden">
-                        {profile.photos && profile.photos.length > 0 ? (
-                          <Image
-                            src={profile.photos[0]}
-                            alt={profile.firstName}
-                            width={300}
-                            height={400}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Camera className="w-12 h-12 text-gray-400" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="absolute top-3 right-3">
-                        <Badge className="bg-green-500 text-white">
-                          {profile.compatibilityScore}% Match
-                        </Badge>
-                      </div>
-                      <div className="absolute top-3 left-3 flex gap-1">
-                        {profile.photos && profile.photos.length > 0 && (
-                          <Badge variant="secondary" className="text-xs">
-                            <Camera className="w-3 h-3 mr-1" />
-                            {profile.photos.length}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="font-semibold text-lg">
-                            {profile.firstName} {profile.lastName?.charAt(0)}.
-                          </h3>
-                          <p className="text-gray-600 text-sm flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {profile.age} years • {formatHeight(profile.height)}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2 mb-4">
-                        <p className="text-sm text-gray-600 flex items-center gap-1">
-                          <GraduationCap className="w-3 h-3" />
-                          {profile.education}
-                        </p>
-                        <p className="text-sm text-gray-600 flex items-center gap-1">
-                          <Briefcase className="w-3 h-3" />
-                          {profile.profession}
-                        </p>
-                        <p className="text-sm text-gray-600 flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {profile.city}, {profile.state}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        <Badge variant="outline" className="text-xs">
-                          {profile.religion}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {profile.community}
-                        </Badge>
-                        {profile.matchReasons?.map((reason) => (
-                          <Badge key={reason} variant="secondary" className="text-xs">
-                            {reason}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1 flex items-center gap-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // Handle interest
-                          }}
-                        >
-                          <Heart className="w-4 h-4" />
-                          Interest
-                        </Button>
-                        <Button
-                          size="sm"
-                          className="flex-1 flex items-center gap-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/chat/${profile._id}`);
-                          }}
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                          Chat
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-            {!loading && profiles.length === 0 && (
-              <div className="text-center py-12">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                  <Search className="w-8 h-8 text-gray-400" />
+          {/* Initial State */}
+          {!searchResults && !loading && (
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
+                  <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No profiles found</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+                  Ready to Find Your Match?
+                </h3>
                 <p className="text-gray-600 mb-6">
-                  Try adjusting your search filters to find more matches.
+                  Use the search form above to discover compatible profiles based on your preferences.
+                  Our advanced matching algorithm will help you find the most suitable partners.
                 </p>
-                <Button onClick={searchProfiles}>Search Again</Button>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="font-medium text-blue-900 mb-2">Search Tips:</h4>
+                  <ul className="text-sm text-blue-800 space-y-1 text-left">
+                    <li>• Start with basic filters like age and location</li>
+                    <li>• Use advanced filters for more specific preferences</li>
+                    <li>• Our compatibility scores help identify the best matches</li>
+                    <li>• Filter by verified profiles for added authenticity</li>
+                  </ul>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

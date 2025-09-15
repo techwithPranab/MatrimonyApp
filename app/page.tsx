@@ -169,7 +169,6 @@ export default function HomePage() {
               <ul className="space-y-2">
                 <li><Link href="/about" className="hover:text-white">About Us</Link></li>
                 <li><Link href="/careers" className="hover:text-white">Careers</Link></li>
-                <li><Link href="/press" className="hover:text-white">Press</Link></li>
                 <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
               </ul>
             </div>
@@ -187,9 +186,7 @@ export default function HomePage() {
             <div>
               <h3 className="text-white font-semibold mb-4">Services</h3>
               <ul className="space-y-2">
-                <li><Link href="/premium" className="hover:text-white">Premium Plans</Link></li>
-                <li><Link href="/assisted" className="hover:text-white">Assisted Service</Link></li>
-                <li><Link href="/elite" className="hover:text-white">Elite Service</Link></li>
+                <li><Link href="/pricing" className="hover:text-white">Premium Plans</Link></li>
                 <li><Link href="/mobile" className="hover:text-white">Mobile App</Link></li>
               </ul>
             </div>

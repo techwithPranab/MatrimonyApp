@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 import UserApproval from "@/models/UserApproval";
 import Profile from "@/models/Profile";
 import SupportTicket from "@/models/SupportTicket";
 import connectDB from "@/lib/db";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // Temporary: Skip auth check for testing
     console.log('Dashboard stats request received');

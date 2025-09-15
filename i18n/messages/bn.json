@@ -1,0 +1,110 @@
+{
+  "HomePage": {
+    "welcomeTitle": "Find Your Perfect Life Partner",
+    "welcomeSubtitle": "India's most trusted matrimony platform with millions of verified profiles",
+    "getStarted": "Get Started",
+    "howItWorks": "How It Works",
+    "createProfile": "Create Profile",
+    "findMatches": "Find Matches",
+    "connectChat": "Connect & Chat",
+    "successStories": "Success Stories",
+    "trustedBy": "Trusted by millions",
+    "verifiedProfiles": "Verified Profiles",
+    "privateSafe": "Private & Safe",
+    "freeToJoin": "Free to Join"
+  },
+  "Navigation": {
+    "home": "Home",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "search": "Search",
+    "matches": "Matches",
+    "messages": "Messages",
+    "settings": "Settings",
+    "help": "Help",
+    "about": "About"
+  },
+  "profile": {
+    "personalInfo": "Personal Information",
+    "preferences": "Partner Preferences",
+    "photos": "Photos",
+    "verification": "Verification",
+    "aboutMe": "About Me",
+    "interests": "Interests",
+    "education": "Education",
+    "profession": "Profession",
+    "location": "Location",
+    "age": "Age",
+    "height": "Height",
+    "religion": "Religion",
+    "community": "Community"
+  },
+  "search": {
+    "searchProfiles": "Search Profiles",
+    "filters": "Filters",
+    "ageRange": "Age Range",
+    "location": "Location",
+    "religion": "Religion",
+    "education": "Education",
+    "profession": "Profession",
+    "maritalStatus": "Marital Status"
+  },
+  "messages": {
+    "sendMessage": "Send Message",
+    "typeMessage": "Type your message...",
+    "online": "Online",
+    "offline": "Offline",
+    "lastSeen": "Last seen"
+  },
+  "subscription": {
+    "plans": "Subscription Plans",
+    "currentPlan": "Current Plan",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "cancel": "Cancel Subscription",
+    "billing": "Billing",
+    "paymentMethod": "Payment Method"
+  },
+  "privacy": {
+    "privacySettings": "Privacy Settings",
+    "dataExport": "Data Export",
+    "accountDeletion": "Account Deletion",
+    "consent": "Consent Management",
+    "gdpr": "GDPR Compliance"
+  }
+}

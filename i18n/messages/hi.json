@@ -1,0 +1,110 @@
+{
+  "HomePage": {
+    "welcomeTitle": "अपना आदर्श जीवन साथी खोजें",
+    "welcomeSubtitle": "भारत का सबसे विश्वसनीय मैट्रिमोनी प्लेटफॉर्म लाखों वेरिफाइड प्रोफाइल के साथ",
+    "getStarted": "शुरू करें",
+    "howItWorks": "यह कैसे काम करता है",
+    "createProfile": "प्रोफाइल बनाएं",
+    "findMatches": "मैच खोजें",
+    "connectChat": "कनेक्ट करें और चैट करें",
+    "successStories": "सफलता की कहानियां",
+    "trustedBy": "लाखों लोगों का भरोसा",
+    "verifiedProfiles": "वेरिफाइड प्रोफाइल",
+    "privateSafe": "निजी और सुरक्षित",
+    "freeToJoin": "ज्वाइन करना फ्री"
+  },
+  "Navigation": {
+    "home": "होम",
+    "login": "लॉग इन",
+    "signup": "साइन अप"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई",
+    "success": "सफलता",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "delete": "मिटाएं",
+    "edit": "संपादित करें",
+    "view": "देखें",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "submit": "सबमिट करें",
+    "close": "बंद करें",
+    "yes": "हाँ",
+    "no": "नहीं"
+  },
+  "auth": {
+    "signIn": "साइन इन",
+    "signUp": "साइन अप",
+    "signOut": "साइन आउट",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "createAccount": "खाता बनाएं",
+    "alreadyHaveAccount": "पहले से खाता है?",
+    "dontHaveAccount": "खाता नहीं है?"
+  },
+  "navigation": {
+    "home": "होम",
+    "dashboard": "डैशबोर्ड",
+    "profile": "प्रोफ़ाइल",
+    "search": "खोजें",
+    "matches": "मैच",
+    "messages": "संदेश",
+    "settings": "सेटिंग्स",
+    "help": "सहायता",
+    "about": "हमारे बारे में"
+  },
+  "profile": {
+    "personalInfo": "व्यक्तिगत जानकारी",
+    "preferences": "साथी की पसंद",
+    "photos": "तस्वीरें",
+    "verification": "सत्यापन",
+    "aboutMe": "मेरे बारे में",
+    "interests": "रुचियां",
+    "education": "शिक्षा",
+    "profession": "पेशा",
+    "location": "स्थान",
+    "age": "आयु",
+    "height": "कद",
+    "religion": "धर्म",
+    "community": "समुदाय"
+  },
+  "search": {
+    "searchProfiles": "प्रोफ़ाइल खोजें",
+    "filters": "फिल्टर",
+    "ageRange": "आयु सीमा",
+    "location": "स्थान",
+    "religion": "धर्म",
+    "education": "शिक्षा",
+    "profession": "पेशा",
+    "maritalStatus": "वैवाहिक स्थिति"
+  },
+  "messages": {
+    "sendMessage": "संदेश भेजें",
+    "typeMessage": "अपना संदेश टाइप करें...",
+    "online": "ऑनलाइन",
+    "offline": "ऑफलाइन",
+    "lastSeen": "अंतिम बार देखा गया"
+  },
+  "subscription": {
+    "plans": "सब्स्क्रिप्शन प्लान",
+    "currentPlan": "वर्तमान प्लान",
+    "upgrade": "अपग्रेड",
+    "downgrade": "डाउनग्रेड",
+    "cancel": "सब्स्क्रिप्शन रद्द करें",
+    "billing": "बिलिंग",
+    "paymentMethod": "भुगतान विधि"
+  },
+  "privacy": {
+    "privacySettings": "गोपनीयता सेटिंग्स",
+    "dataExport": "डेटा निर्यात",
+    "accountDeletion": "खाता हटाना",
+    "consent": "सहमति प्रबंधन",
+    "gdpr": "जीडीपीआर अनुपालन"
+  }
+}

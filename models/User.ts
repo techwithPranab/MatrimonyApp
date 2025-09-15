@@ -23,7 +23,6 @@ const UserSchema = new Schema<IUser>({
     required: true,
     unique: true,
     lowercase: true,
-    index: true,
   },
   hashedPassword: {
     type: String,
@@ -33,7 +32,6 @@ const UserSchema = new Schema<IUser>({
     type: String,
     unique: true,
     sparse: true, // Allow null values but unique non-null values
-    index: true,
   },
   roles: {
     type: [String],
@@ -69,8 +67,9 @@ const UserSchema = new Schema<IUser>({
   timestamps: true,
 });
 
-// Indexes
-// Removed duplicate index for email
+// Indexes - avoid duplicates with schema field definitions
+UserSchema.index({ email: 1 });
+UserSchema.index({ matrimonyId: 1 });
 UserSchema.index({ phone: 1 }, { sparse: true });
 UserSchema.index({ roles: 1 });
 UserSchema.index({ isActive: 1 });

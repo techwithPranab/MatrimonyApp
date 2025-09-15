@@ -68,7 +68,7 @@ export default function InterestsPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "accepted" }),
+        body: JSON.stringify({ action: "accept" }),
       });
 
       if (response.ok) {
@@ -93,7 +93,7 @@ export default function InterestsPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "declined" }),
+        body: JSON.stringify({ action: "decline" }),
       });
 
       if (response.ok) {

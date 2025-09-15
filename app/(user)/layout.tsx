@@ -25,11 +25,11 @@ export default function UserLayout({
   const pathname = usePathname();
 
   const navigationItems = [
-    { href: "/dashboard", icon: Home, label: "Dashboard" },
-    { href: "/search", icon: Search, label: "Search" },
-    { href: "/interests", icon: Heart, label: "Interests" },
-    { href: "/chat", icon: MessageCircle, label: "Messages" },
-    { href: "/profile/edit", icon: User, label: "Profile" },
+    { href: "/dashboard" as const, icon: Home, label: "Dashboard" },
+    { href: "/search" as const, icon: Search, label: "Search" },
+    { href: "/interests" as const, icon: Heart, label: "Interests" },
+    { href: "/chat" as const, icon: MessageCircle, label: "Messages" },
+    { href: "/profile/edit" as const, icon: User, label: "Profile" },
   ];
 
   const handleSignOut = async () => {

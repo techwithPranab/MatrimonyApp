@@ -1,3 +1,42 @@
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+    const { id } = await context.params;
+    const body = await request.json();
+    console.log("User PATCH body:", body);
+    console.log("User PATCH id:", id);
+    // Only allow specific actions
+    if (!body.action || !['activate', 'deactivate', 'suspend'].includes(body.action)) {
+      return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+    }
+
+    const update: Partial<{ isActive: boolean }> = {};
+    if (body.action === 'activate') update.isActive = true;
+    if (body.action === 'deactivate') update.isActive = false;
+    if (body.action === 'suspend') update.isActive = false; // You may want a separate suspended field
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      update,
+      { new: true, runValidators: true }
+    ).select('-password -twoFactorSecret');
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error("User PATCH error:", error);
+    return NextResponse.json(
+      { error: "Failed to update user status" },
+      { status: 500 }
+    );
+  }
+}
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
