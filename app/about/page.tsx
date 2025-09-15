@@ -424,8 +424,8 @@ export default function AboutUsPage() {
               <h3 className="text-white font-semibold mb-4">Connect</h3>
               <ul className="space-y-2">
                 <li><Link href="/pricing" className="hover:text-white">Premium Plans</Link></li>
-                <li><Link href="/mobile" className="hover:text-white">Mobile App</Link></li>
-                <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
+                <li><span className="text-gray-400">Mobile App (Coming Soon)</span></li>
+                <li><span className="text-gray-400">Blog (Coming Soon)</span></li>
               </ul>
             </div>
           </div>

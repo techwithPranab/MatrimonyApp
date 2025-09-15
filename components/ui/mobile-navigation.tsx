@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 interface MobileNavItem {
-  href: `/${string}`;
+  href: '/dashboard' | '/search' | '/interests' | '/chat' | '/profile/edit' | '/settings' | '/help' | '/about';
   label: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
 }

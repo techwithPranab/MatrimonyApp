@@ -2,8 +2,10 @@ import { NextAuthOptions, DefaultSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import connectDB from './db';
 import User from '@/models/User';
+import { sendPasswordResetEmail as sendEmailPasswordReset } from './email';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -139,4 +141,14 @@ declare module 'next-auth/jwt' {
     id: string;
     roles: string[];
   }
+}
+
+// Password reset utilities
+export function generateResetToken(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+export async function sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
+  const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;
+  await sendEmailPasswordReset(email, "User", resetUrl);
 }

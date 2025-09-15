@@ -357,7 +357,6 @@ export default function HelpPage() {
             <div>
               <h3 className="text-white font-semibold mb-4">Quick Help</h3>
               <ul className="space-y-2">
-                <li><Link href="/help-center" className="hover:text-white">Help Center</Link></li>
                 <li><Link href="/safety" className="hover:text-white">Safety Tips</Link></li>
                 <li><Link href="/contact" className="hover:text-white">Contact Support</Link></li>
                 <li><Link href="/success-stories" className="hover:text-white">Success Stories</Link></li>
