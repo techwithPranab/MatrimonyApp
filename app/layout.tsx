@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getSessionSafely } from "@/lib/session-handler";
 import { ClientProviders } from "@/components/client-providers";
 import "./globals.css";
 
@@ -41,7 +40,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  // Use safe session retrieval to handle JWT decryption errors
+  const session = await getSessionSafely();
 
   return (
     <html lang="en" suppressHydrationWarning>

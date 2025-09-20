@@ -1,13 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { performanceMonitor } from './performance';
 import { userAnalytics } from './user-analytics';
 
 // Hook for tracking page views
 export function usePageTracking() {
-  const router = useRouter();
   const lastPathname = useRef<string | null>(null);
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { Search, Filter, X } from 'lucide-react';
 import { Button } from './button';
 import { Input } from './input';
@@ -220,9 +221,11 @@ export function SwipeableProfileList({
             <div className="flex items-center space-x-3">
               <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden">
                 {profile.photos[0] && (
-                  <img
+                  <Image
                     src={profile.photos[0]}
                     alt={profile.name}
+                    width={64}
+                    height={64}
                     className="w-full h-full object-cover"
                   />
                 )}

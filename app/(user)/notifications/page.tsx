@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -72,11 +72,7 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [filter, typeFilter]);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         limit: '50',
@@ -104,7 +100,11 @@ export default function NotificationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, typeFilter]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [filter, typeFilter, fetchNotifications]);
 
   const markAsRead = async (notificationId: string) => {
     try {

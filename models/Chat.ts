@@ -27,7 +27,6 @@ const ConversationSchema = new Schema<IConversation>({
     type: String,
     required: true,
     unique: true,
-    index: true,
   },
   isActive: {
     type: Boolean,
@@ -67,12 +66,10 @@ const MessageSchema = new Schema<IMessage>({
   conversationId: {
     type: String,
     required: true,
-    index: true,
   },
   senderId: {
     type: String,
     required: true,
-    index: true,
   },
   content: {
     type: String,

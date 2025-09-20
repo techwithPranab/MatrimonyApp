@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = 'force-dynamic';
+
 // This would typically come from your database
 async function getAdminMetrics() {
   // Mock data - replace with actual database queries

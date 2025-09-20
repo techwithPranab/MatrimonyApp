@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import OnboardingStep1 from '@/components/onboarding/OnboardingStep1';
@@ -21,24 +21,13 @@ interface OnboardingStatus {
 }
 
 export default function OnboardingPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [onboardingStatus, setOnboardingStatus] = useState<OnboardingStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/sign-in');
-      return;
-    }
-
-    if (status === 'authenticated') {
-      fetchOnboardingStatus();
-    }
-  }, [status, router]);
-
-  const fetchOnboardingStatus = async () => {
+  const fetchOnboardingStatus = useCallback(async () => {
     try {
       const response = await fetch('/api/onboarding');
       if (response.ok) {
@@ -55,7 +44,18 @@ export default function OnboardingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router, setOnboardingStatus, setLoading]);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/sign-in');
+      return;
+    }
+
+    if (status === 'authenticated') {
+      fetchOnboardingStatus();
+    }
+  }, [status, router, fetchOnboardingStatus]);
 
   const saveStep = async (step: number, data: unknown) => {
     setSaving(true);

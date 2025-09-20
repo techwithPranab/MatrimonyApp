@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
@@ -124,9 +125,11 @@ export default function SearchResults({
               <div className="relative">
                 <Avatar className="w-20 h-20">
                   {profile.photos?.[0] ? (
-                    <img 
+                    <Image 
                       src={profile.photos[0]} 
                       alt={profile.firstName}
+                      width={80}
+                      height={80}
                       className="w-full h-full object-cover"
                     />
                   ) : (

@@ -1,131 +1,207 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Shield, Users, Zap } from "lucide-react";
+import { Heart, Shield, Users, Zap, Star, ArrowRight, CheckCircle, Menu } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+    <div className="min-h-screen">
+      {/* Modern Header */}
+      <header className="glass sticky top-0 z-50 border-b border-white/10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-pink-500" />
-            <span className="text-2xl font-bold text-gray-900">MatrimonyWeb</span>
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <Heart className="h-8 w-8 text-purple-600" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse-soft"></div>
+            </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              MatrimonyWeb
+            </span>
           </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link href="/pricing" className="text-neutral-600 hover:text-purple-600 transition-colors font-medium">
               Pricing
             </Link>
-            <Link href="/success-stories" className="text-gray-600 hover:text-gray-900">
+            <Link href="/success-stories" className="text-neutral-600 hover:text-purple-600 transition-colors font-medium">
               Success Stories
             </Link>
-            <Link href="/help" className="text-gray-600 hover:text-gray-900">
+            <Link href="/help" className="text-neutral-600 hover:text-purple-600 transition-colors font-medium">
               Help
             </Link>
           </nav>
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" asChild>
+          
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-3">
+            <Button variant="ghost" className="text-neutral-600 hover:text-purple-600" asChild>
               <Link href="/sign-in">Sign In</Link>
             </Button>
-            <Button asChild>
+            <Button 
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300" 
+              asChild
+            >
               <Link href="/sign-up">Join Free</Link>
             </Button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-neutral-600 hover:text-purple-600"
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Find Your Perfect{" "}
-            <span className="text-pink-500">Life Partner</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Join millions of people who found their soulmate on India&apos;s most trusted matrimony platform. 
-            Our AI-powered matching system helps you connect with compatible profiles.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/sign-up">
-                Start Your Journey Free
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/search">
-                Browse Profiles
-              </Link>
-            </Button>
+      <section className="relative py-12 sm:py-20 lg:py-32 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-pink-50/50"></div>
+        <div className="absolute top-10 sm:top-20 left-4 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 sm:bottom-20 right-4 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-pink-200/30 rounded-full blur-3xl"></div>
+        
+        <div className="relative container mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto animate-fade-in">
+            <h1 className="mb-6 sm:mb-8 text-3xl sm:text-4xl lg:text-6xl xl:text-7xl">
+              Find Your Perfect{" "}
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+                Life Partner
+              </span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl lg:text-2xl text-neutral-600 leading-relaxed mb-8 sm:mb-12 max-w-3xl mx-auto px-4">
+              Join millions who found their soulmate on India&apos;s most trusted matrimony platform.
+              Our AI-powered matching connects you with genuinely compatible profiles.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 sm:mb-16 animate-slide-up px-4">
+              <Button 
+                size="lg" 
+                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 px-8 py-4 text-lg touch-optimized" 
+                asChild
+              >
+                <Link href="/sign-up" className="flex items-center justify-center gap-2">
+                  Start Your Journey
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="w-full sm:w-auto border-2 border-purple-200 text-purple-600 hover:bg-purple-50 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 px-8 py-4 text-lg touch-optimized" 
+                asChild
+              >
+                <Link href="/search">Browse Profiles</Link>
+              </Button>
+            </div>
+            
+            {/* Trust Indicators */}
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-neutral-600 animate-scale-in px-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span>100% Verified Profiles</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-blue-500" />
+                <span>Privacy Protected</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-500" />
+                <span>5M+ Success Stories</span>
+              </div>
+            </div>
           </div>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-pink-500 mb-2">10M+</div>
-              <div className="text-gray-600">Verified Profiles</div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-12 sm:py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center">
+            <div className="animate-fade-in">
+              <div className="text-4xl sm:text-5xl font-bold mb-2">10M+</div>
+              <div className="text-purple-100 text-base sm:text-lg">Verified Profiles</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-pink-500 mb-2">5 Lakh+</div>
-              <div className="text-gray-600">Success Stories</div>
+            <div className="animate-fade-in">
+              <div className="text-4xl sm:text-5xl font-bold mb-2">5M+</div>
+              <div className="text-purple-100 text-base sm:text-lg">Success Stories</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-pink-500 mb-2">50+</div>
-              <div className="text-gray-600">Communities</div>
+            <div className="animate-fade-in">
+              <div className="text-4xl sm:text-5xl font-bold mb-2">50+</div>
+              <div className="text-purple-100 text-base sm:text-lg">Communities</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-16 sm:py-20 px-4">
         <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Why Choose MatrimonyWeb?
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+            <h2 className="mb-4 sm:mb-6 text-3xl sm:text-4xl lg:text-5xl">
+              Why Choose <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">MatrimonyWeb</span>?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We combine traditional matchmaking with modern technology to help you find your perfect match.
+            <p className="text-lg sm:text-xl lg:text-2xl text-neutral-600 leading-relaxed max-w-2xl mx-auto px-4">
+              We combine traditional matchmaking with modern technology to create meaningful connections.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center">
-              <CardHeader>
-                <Shield className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-                <CardTitle>Verified Profiles</CardTitle>
-                <CardDescription>
-                  All profiles are manually verified for authenticity and safety.
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <Card className="card-premium group animate-scale-in touch-optimized">
+              <CardHeader className="text-center p-6 sm:p-8">
+                <div className="mb-4 sm:mb-6 relative">
+                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <Shield className="h-6 sm:h-8 w-6 sm:w-8 text-blue-600" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg sm:text-xl mb-3 sm:mb-4">Verified Profiles</CardTitle>
+                <CardDescription className="text-neutral-600 leading-relaxed text-sm sm:text-base">
+                  Every profile is manually verified for authenticity and safety. Connect with confidence.
                 </CardDescription>
               </CardHeader>
             </Card>
-            
-            <Card className="text-center">
-              <CardHeader>
-                <Zap className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-                <CardTitle>AI Matching</CardTitle>
-                <CardDescription>
-                  Advanced AI algorithms to find your most compatible matches.
+
+            <Card className="card-premium group animate-scale-in touch-optimized">
+              <CardHeader className="text-center p-6 sm:p-8">
+                <div className="mb-4 sm:mb-6 relative">
+                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <Zap className="h-6 sm:h-8 w-6 sm:w-8 text-purple-600" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg sm:text-xl mb-3 sm:mb-4">AI Matching</CardTitle>
+                <CardDescription className="text-neutral-600 leading-relaxed text-sm sm:text-base">
+                  Advanced algorithms analyze compatibility across multiple dimensions for perfect matches.
                 </CardDescription>
               </CardHeader>
             </Card>
-            
-            <Card className="text-center">
-              <CardHeader>
-                <Users className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-                <CardTitle>Diverse Community</CardTitle>
-                <CardDescription>
-                  Members from 50+ communities and all walks of life.
+
+            <Card className="card-premium group animate-scale-in touch-optimized">
+              <CardHeader className="text-center p-6 sm:p-8">
+                <div className="mb-4 sm:mb-6 relative">
+                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <Users className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg sm:text-xl mb-3 sm:mb-4">Diverse Community</CardTitle>
+                <CardDescription className="text-neutral-600 leading-relaxed text-sm sm:text-base">
+                  Members from 50+ communities, all religions, and diverse backgrounds worldwide.
                 </CardDescription>
               </CardHeader>
             </Card>
-            
-            <Card className="text-center">
-              <CardHeader>
-                <Heart className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-                <CardTitle>Success Stories</CardTitle>
-                <CardDescription>
-                  Over 5 lakh couples found their happiness through us.
+
+            <Card className="card-premium group animate-scale-in touch-optimized">
+              <CardHeader className="text-center p-6 sm:p-8">
+                <div className="mb-4 sm:mb-6 relative">
+                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-pink-100 to-pink-200 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <Heart className="h-6 sm:h-8 w-6 sm:w-8 text-pink-600" />
+                  </div>
+                </div>
+                <CardTitle className="text-lg sm:text-xl mb-3 sm:mb-4">Success Stories</CardTitle>
+                <CardDescription className="text-neutral-600 leading-relaxed text-sm sm:text-base">
+                  Over 5 million couples found their happiness through our trusted platform.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -134,67 +210,83 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-pink-500">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Find Your Life Partner?
-          </h2>
-          <p className="text-xl text-pink-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of successful couples who found love on MatrimonyWeb.
-          </p>
-          <Button size="lg" variant="secondary" asChild>
-            <Link href="/sign-up">
-              Create Profile Now - It&apos;s Free!
-            </Link>
-          </Button>
+      <section className="py-16 sm:py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDU2IDAgTCAwIDAgMCA1NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
+        
+        <div className="relative container mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-white animate-fade-in px-4">
+            <h2 className="mb-4 sm:mb-6 text-white text-3xl sm:text-4xl lg:text-5xl">
+              Ready to Find Your Life Partner?
+            </h2>
+            <p className="text-lg sm:text-xl leading-relaxed mb-8 sm:mb-12 text-purple-100">
+              Join thousands of successful couples who found love on MatrimonyWeb. Your perfect match is waiting.
+            </p>
+            <Button 
+              size="lg" 
+              className="w-full sm:w-auto bg-white text-purple-600 hover:bg-purple-50 shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-500 px-8 sm:px-12 py-4 text-lg font-semibold touch-optimized" 
+              asChild
+            >
+              <Link href="/sign-up" className="flex items-center justify-center gap-2">
+                Create Profile Now - Free!
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Heart className="h-6 w-6 text-pink-500" />
-                <span className="text-xl font-bold text-white">MatrimonyWeb</span>
+      <footer className="bg-neutral-900 text-neutral-300 py-12 sm:py-16 px-4 relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="relative container mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
+            <div className="space-y-4 sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <Heart className="h-8 w-8 text-purple-400" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse-soft"></div>
+                </div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  MatrimonyWeb
+                </span>
               </div>
-              <p className="text-gray-400">
-                India&apos;s most trusted matrimony platform helping millions find their perfect life partner.
+              <p className="text-neutral-400 leading-relaxed text-sm sm:text-base">
+                India&apos;s most trusted matrimony platform helping millions find their perfect life partner with advanced AI matching.
               </p>
             </div>
-            
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="hover:text-white">About Us</Link></li>
-                <li><Link href="/careers" className="hover:text-white">Careers</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
+
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold text-lg">Company</h3>
+              <ul className="space-y-3">
+                <li><Link href="/about" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">About Us</Link></li>
+                <li><Link href="/careers" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Careers</Link></li>
+                <li><Link href="/contact" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Contact</Link></li>
               </ul>
             </div>
-            
-            <div>
-              <h3 className="text-white font-semibold mb-4">Support</h3>
-              <ul className="space-y-2">
-                <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
-                <li><Link href="/safety" className="hover:text-white">Safety</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
-                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
+
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold text-lg">Support</h3>
+              <ul className="space-y-3">
+                <li><Link href="/help" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Help Center</Link></li>
+                <li><Link href="/safety" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Safety</Link></li>
+                <li><Link href="/terms" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Terms</Link></li>
+                <li><Link href="/privacy" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Privacy</Link></li>
               </ul>
             </div>
-            
-            <div>
-              <h3 className="text-white font-semibold mb-4">Services</h3>
-              <ul className="space-y-2">
-                <li><Link href="/pricing" className="hover:text-white">Premium Plans</Link></li>
-                <li><span className="text-gray-400">Mobile App (Coming Soon)</span></li>
+
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold text-lg">Services</h3>
+              <ul className="space-y-3">
+                <li><Link href="/pricing" className="text-neutral-400 hover:text-purple-400 transition-colors touch-optimized inline-block">Premium Plans</Link></li>
+                <li><span className="text-neutral-500">Mobile App (Coming Soon)</span></li>
               </ul>
             </div>
           </div>
-          
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p className="text-gray-400">
-              © 2024 MatrimonyWeb. All rights reserved.
+
+          <div className="border-t border-neutral-700 pt-6 sm:pt-8 text-center">
+            <p className="text-neutral-400 text-sm sm:text-base">
+              © 2024 MatrimonyWeb. All rights reserved. Made with ❤️ for lasting connections.
             </p>
           </div>
         </div>

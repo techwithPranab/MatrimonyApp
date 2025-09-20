@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +51,7 @@ export default function UserManagementPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
 
-  const fetchUsers = async (page = 1) => {
+  const fetchUsers = useCallback(async (page = 1) => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams({
@@ -122,11 +122,11 @@ export default function UserManagementPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, setUsers, setTotalPages, setTotalUsers, setCurrentPage, setLoading]);
 
   useEffect(() => {
     fetchUsers(currentPage);
-  }, [filters]);
+  }, [currentPage, filters, fetchUsers]);
 
   const handleFilterChange = (key: keyof UserFilters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));

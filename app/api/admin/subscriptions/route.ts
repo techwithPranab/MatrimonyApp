@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 
 // Mock data for demo - in production this would come from database
@@ -51,7 +51,7 @@ const mockSubscriptions = [
   },
 ];
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await connectDB();
     

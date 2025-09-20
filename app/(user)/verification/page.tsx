@@ -116,13 +116,11 @@ export default function VerificationPage() {
         <TabsContent value="status">
           <VerificationStatus
             verificationData={verificationData}
-            onRefresh={fetchVerificationData}
           />
         </TabsContent>
 
         <TabsContent value="upload">
           <VerificationUpload
-            profileId={verificationData?.profileId}
             onSuccess={fetchVerificationData}
           />
         </TabsContent>

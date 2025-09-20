@@ -4,26 +4,6 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
 
-interface AdminUserData {
-  _id: unknown;
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  phone?: string;
-  registrationDate?: Date;
-  lastActiveAt?: Date;
-  subscription?: string;
-  verificationStatus?: string;
-  profileCompletion?: number;
-  totalViews?: number;
-  totalLikes?: number;
-  isActive?: boolean;
-  isSuspended?: boolean;
-  city?: string;
-  state?: string;
-  country?: string;
-}
-
 // Admin authentication middleware
 async function isAdmin(request: NextRequest): Promise<boolean> {
   const session = await getServerSession(authOptions);

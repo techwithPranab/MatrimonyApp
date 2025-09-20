@@ -63,6 +63,10 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user, account }) {
@@ -110,6 +114,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/sign-in',
+    error: '/sign-in',
   },
   events: {
     async signIn({ user, account, isNewUser }) {
@@ -118,6 +123,7 @@ export const authOptions: NextAuthOptions = {
       }
     },
   },
+  debug: process.env.NODE_ENV === 'development',
 };
 
 declare module 'next-auth' {

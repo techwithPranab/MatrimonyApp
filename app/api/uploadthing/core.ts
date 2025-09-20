@@ -10,7 +10,7 @@ const f = createUploadthing();
 export const ourFileRouter = {
   // Profile photos - allow authenticated users to upload profile images
   profileImage: f({ image: { maxFileSize: "4MB", maxFileCount: 5 } })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       const session = await getServerSession(authOptions);
 
       if (!session?.user?.id) throw new Error("Unauthorized");
@@ -46,7 +46,7 @@ export const ourFileRouter = {
     image: { maxFileSize: "8MB", maxFileCount: 1 },
     pdf: { maxFileSize: "8MB", maxFileCount: 1 }
   })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       const session = await getServerSession(authOptions);
 
       if (!session?.user?.id) throw new Error("Unauthorized");
@@ -64,7 +64,7 @@ export const ourFileRouter = {
 
   // Chat attachments - for sending images in messages
   chatAttachment: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       const session = await getServerSession(authOptions);
 
       if (!session?.user?.id) throw new Error("Unauthorized");
@@ -88,7 +88,7 @@ export const ourFileRouter = {
     image: { maxFileSize: "8MB", maxFileCount: 10 },
     pdf: { maxFileSize: "16MB", maxFileCount: 5 }
   })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       const session = await getServerSession(authOptions);
 
       if (!session?.user?.id) throw new Error("Unauthorized");

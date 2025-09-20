@@ -3,6 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import { AnalyticsProvider, usePageTracking } from "@/lib/analytics/hooks";
+import { useClearInvalidSession } from "@/lib/clear-invalid-session";
 
 interface ClientProvidersProps {
   readonly children: React.ReactNode;
@@ -11,6 +12,7 @@ interface ClientProvidersProps {
 
 function AnalyticsWrapper({ children }: { readonly children: React.ReactNode }) {
   usePageTracking();
+  useClearInvalidSession(); // Auto-clear invalid JWT sessions
   return <>{children}</>;
 }
 

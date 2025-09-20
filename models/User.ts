@@ -68,9 +68,6 @@ const UserSchema = new Schema<IUser>({
 });
 
 // Indexes - avoid duplicates with schema field definitions
-UserSchema.index({ email: 1 });
-UserSchema.index({ matrimonyId: 1 });
-UserSchema.index({ phone: 1 }, { sparse: true });
 UserSchema.index({ roles: 1 });
 UserSchema.index({ isActive: 1 });
 

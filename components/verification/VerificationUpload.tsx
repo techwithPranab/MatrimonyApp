@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Upload, FileText, X } from 'lucide-react';
 
 interface VerificationUploadProps {
-  readonly profileId?: string;
   readonly onSuccess: () => void;
 }
 
@@ -57,7 +56,7 @@ const VERIFICATION_TYPES = [
   },
 ];
 
-export default function VerificationUpload({ profileId, onSuccess }: VerificationUploadProps) {
+export default function VerificationUpload({ onSuccess }: VerificationUploadProps) {
   const [selectedType, setSelectedType] = useState<string>('');
   const [documents, setDocuments] = useState<DocumentFile[]>([]);
   const [formData, setFormData] = useState<Record<string, string | number | undefined>>({});

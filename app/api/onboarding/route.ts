@@ -4,7 +4,7 @@ import connectDB from '@/lib/db';
 import Profile, { IProfile } from '@/models/Profile';
 import { authOptions } from '@/lib/auth';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

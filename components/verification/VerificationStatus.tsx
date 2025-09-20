@@ -22,7 +22,6 @@ interface VerificationData {
 
 interface VerificationStatusProps {
   readonly verificationData: VerificationData | null;
-  readonly onRefresh: () => void;
 }
 
 const VERIFICATION_TYPES = [
@@ -58,7 +57,7 @@ const VERIFICATION_TYPES = [
   },
 ];
 
-export default function VerificationStatus({ verificationData, onRefresh }: VerificationStatusProps) {
+export default function VerificationStatus({ verificationData }: VerificationStatusProps) {
   if (!verificationData) {
     return (
       <Card>

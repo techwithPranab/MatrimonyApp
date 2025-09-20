@@ -101,13 +101,11 @@ const ProfileSchema = new Schema<IProfile>({
     type: String,
     required: true,
     unique: true,
-    index: true,
   },
   matrimonyId: {
     type: String,
     unique: true,
     sparse: true, // Allow null values but unique non-null values
-    index: true,
   },
   
   // Basic Information

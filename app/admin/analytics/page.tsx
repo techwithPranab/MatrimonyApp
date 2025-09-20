@@ -5,6 +5,8 @@ export const metadata = {
   description: "Real-time analytics and performance monitoring for the matrimony platform",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function AnalyticsPage() {
   return <AnalyticsDashboard />;
 }

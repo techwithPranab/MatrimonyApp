@@ -68,7 +68,7 @@ export default function SearchPage() {
   const { trackSearch } = useActionTracking();
   const { trackMatchmaking, trackProfileAction } = useMatrimonyTracking();
 
-  const handleSearch = async (filters?: SearchFilters, page = 1) => {
+  const handleSearch = useCallback(async (filters?: SearchFilters, page = 1) => {
     setLoading(true);
     
     // Track search analytics
@@ -136,14 +136,14 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, trackSearch, isMobile, trackMatchmaking, setSearchResults, setLoading]);
 
   const handleRefresh = useCallback(async () => {
     await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate refresh
     if (searchResults) {
       handleSearch();
     }
-  }, [searchResults]);
+  }, [searchResults, handleSearch]);
 
   const handleLike = useCallback(async (profileId: string) => {
     try {

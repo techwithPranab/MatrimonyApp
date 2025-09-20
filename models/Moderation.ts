@@ -21,12 +21,10 @@ const ReportSchema = new Schema<IReport>({
   reporterId: {
     type: String,
     required: true,
-    index: true,
   },
   targetUserId: {
     type: String,
     required: true,
-    index: true,
   },
   targetType: {
     type: String,
@@ -55,7 +53,6 @@ const ReportSchema = new Schema<IReport>({
   },
   moderatorId: {
     type: String,
-    index: true,
   },
   moderatorNotes: {
     type: String,
@@ -98,7 +95,6 @@ const AuditLogSchema = new Schema<IAuditLog>({
   actorId: {
     type: String,
     required: true,
-    index: true,
   },
   actorType: {
     type: String,
@@ -108,7 +104,6 @@ const AuditLogSchema = new Schema<IAuditLog>({
   action: {
     type: String,
     required: true,
-    index: true,
   },
   targetType: {
     type: String,
@@ -118,7 +113,6 @@ const AuditLogSchema = new Schema<IAuditLog>({
   targetId: {
     type: String,
     required: true,
-    index: true,
   },
   metadata: {
     type: Schema.Types.Mixed,
